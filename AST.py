@@ -51,7 +51,9 @@ class Disjunction(Proposition):
 
 @dataclass(frozen=True)
 class Negation(Proposition):
-    proposition: Proposition
+    proposition:Proposition
+    # subject: Proposition
+    # predicate:Proposition
 
 
 @dataclass(frozen=True)

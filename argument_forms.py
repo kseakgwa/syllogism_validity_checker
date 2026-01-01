@@ -4,7 +4,7 @@ Created on Tue Dec 23 21:45:45 2025
 
 @author: 34346
 """
-from AST import Conditional,Proposition, Universal
+from AST import Conditional,Proposition, Universal, Negation
 
 def modus_ponens(p1: Proposition, p2: Proposition):
     """
@@ -80,6 +80,64 @@ def apply_valid_categorical_1(premises):
     for p1 in premises:
         for p2 in premises:
             result = valid_categorical_1(p1, p2)
+            if result is not None:
+                new_conclusions.add(result)
+
+    return new_conclusions
+
+def modus_tollens (p1: Proposition, p2: Proposition):
+    
+    """
+    If p1 is a conditional (P → Q) and p2 is a negation not Q,
+    return not P. Otherwise, return None.
+    """
+
+    if isinstance(p1, Conditional) and isinstance(p2, Negation):
+        print(p1)
+        print(p2)
+        if p2.proposition == p1.consequent:
+            return Negation(p1.antecedent)
+
+    if isinstance(p2, Conditional) and isinstance(p1, Negation):
+        if p1.proposition == p2.consequent:
+            return Negation(p2.antecedent)
+
+    return None
+
+def apply_modus_tollens(premises):
+    new_conclusions = set()
+
+    for p1 in premises:
+        for p2 in premises:
+            result = modus_tollens(p1, p2)
+            if result is not None:
+                new_conclusions.add(result)
+
+    return new_conclusions
+
+def denying_the_antecendent (p1: Proposition, p2: Proposition):
+    
+    """
+    If p1 is a conditional (P → Q) and p2 is a negation not P,
+    return not P. Otherwise, return None.
+    """
+
+    if isinstance(p1, Conditional) and isinstance(p2, Negation):
+        if p2.proposition == p1.antecedent:
+            return Negation(p1.antecedent)
+
+    if isinstance(p2, Conditional) and isinstance(p1, Negation):
+        if p1.proposition == p2.antecedent:
+            return Negation(p2.antecedent)
+
+    return None
+
+def apply_denying_the_antecendent(premises):
+    new_conclusions = set()
+
+    for p1 in premises:
+        for p2 in premises:
+            result = denying_the_antecendent(p1, p2)
             if result is not None:
                 new_conclusions.add(result)
 

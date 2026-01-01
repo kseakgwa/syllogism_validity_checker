@@ -15,7 +15,7 @@ Created on Sun Dec 21 01:45:26 2025
 
 from AST import *
 from parsers import *
-from argument_forms import apply_modus_ponens, apply_affirming_the_consequent, apply_valid_categorical_1
+from argument_forms import apply_modus_ponens, apply_affirming_the_consequent, apply_valid_categorical_1, apply_modus_tollens, apply_denying_the_antecendent
 
 def user_input(): #This gets the required input from the user
     
@@ -33,19 +33,19 @@ def apply_rules(parsed_syllogism, rule_to_prac):
     
     rule_map={"modus ponens":[apply_modus_ponens(parsed_syllogism), "valid"],
               "affirming the consequent":[apply_affirming_the_consequent(parsed_syllogism), "invalid"],
-              "Categorical 1": [apply_valid_categorical_1(parsed_syllogism), "valid"]
+              "Categorical 1": [apply_valid_categorical_1(parsed_syllogism), "valid"],
+              "modus tollens":[apply_modus_tollens(parsed_syllogism), "valid"],
+              "denying the antecedent":[apply_denying_the_antecendent(parsed_syllogism), "invalid"]
               }
     
     result= rule_map.get(rule_to_prac)[0]
     validity= rule_map.get(rule_to_prac)[1]
-    
-    # def recursive_rule_search(parsed_syllogism, rule_to_prac,result):
         
     if result!=set():
         rule_name= rule_to_prac
         return result, rule_name,validity
+    
     else:
-        
         for rule_name in rule_map:
             if rule_name != rule_to_prac:
                 result= rule_map.get(rule_name)[0]
@@ -53,39 +53,37 @@ def apply_rules(parsed_syllogism, rule_to_prac):
                 if result != set():
                     return result, rule_name, validity
                     
-                        
-
 def output_gen(rule_output, rule_name, rule_to_prac,validity):
     
     if rule_output!=set():
+        
         verdict= validity
+        
         if rule_to_prac==rule_name:
         
             match_intention = (f"You did what you set out to: you generated an example of a {verdict} {rule_to_prac}")
         else:
             match_intention = (f"You didn't do what you set out to: you generated an example of a {verdict} {rule_name} instead of a {rule_to_prac}")
-    # else:
-    #     verdict=(f"Invalid:{rule_name}")
         
     return match_intention
 
 if __name__== "__main__":
     
     syllogism_lines,rule_to_prac = user_input()
+    
     parsed_syllogism = []
+    
     for line in syllogism_lines[:-1]:
+        
         line=normalize(line)
         line_logic=parse_atomic(line)
-        # print(parsed_syllogism)
         parsed_syllogism.append(line_logic)
-        # print(line_logic)
-    # print(parsed_syllogism)
-    rule_output, rule_name, validity=apply_rules(parsed_syllogism, rule_to_prac)
-    # while rule_output!=set():
         
-    #     a
+    rule_output, rule_name, validity= apply_rules(parsed_syllogism, rule_to_prac)
     
-    print(output_gen(rule_output, rule_name, rule_to_prac, validity))
+    final_output= output_gen(rule_output, rule_name, rule_to_prac, validity)
+    
+    print(final_output)
     
         
         

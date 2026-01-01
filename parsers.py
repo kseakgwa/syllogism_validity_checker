@@ -17,10 +17,19 @@ def parse_atomic(sentence: str) -> Proposition:
         return parse_universal(sentence)
     if sentence.startswith("some "):
         return parse_existential(sentence)
-    if sentence.startswith("not "):
-        return Negation(parse_atomic(sentence[4:]))
+    if "not" in sentence.split():
+        new_sentence=[]
+        sentence=sentence.split()
+        for word in sentence:
+            if word != "not":
+                new_sentence.append(word)
+        sentence= " ".join(new_sentence)
+        # print(sentence)
+        return Negation(parse_atomic(sentence))
+    # if "or" in sentence.split
     else:
         try:
+            # print(sentence)
             return parse_individual(sentence)
         except:
             raise ValueError(f"Unrecognized form: {sentence}")
@@ -50,6 +59,14 @@ def parse_universal(sentence: str) -> Universal:
     subject = make_term(tokens[1])
     predicate = make_term(tokens[-1])
     return Universal(subject, predicate)
+
+def parse_negation(sentence: str) -> Negation:
+    # "Socrates is a man"
+    tokens = sentence.split()
+    subject = make_term(tokens[0])
+    predicate = make_term(tokens[-1])
+    return Negation(subject, predicate)
+
 
 def parse_existential(sentence: str) -> Existential:
     # "some dogs are pets"
