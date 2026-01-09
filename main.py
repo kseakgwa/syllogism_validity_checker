@@ -15,8 +15,7 @@ Created on Sun Dec 21 01:45:26 2025
 
 from AST import *
 from parsers import *
-from argument_forms import apply_modus_ponens, apply_affirming_the_consequent, apply_valid_categorical_1, apply_modus_tollens, apply_denying_the_antecendent
-
+from argument_forms import apply_modus_ponens, apply_affirming_the_consequent, apply_valid_categorical_1,apply_valid_categorical_2,apply_valid_categorical_3,apply_valid_categorical_4, apply_valid_categorical_5, apply_valid_categorical_6, apply_modus_tollens, apply_denying_the_antecendent, apply_eliminative_syllogism
 def user_input(): #This gets the required input from the user
     
     print("***** Syllogism Validity Checker *****")
@@ -34,9 +33,14 @@ def apply_rules(parsed_syllogism, rule_to_prac):
     rule_map={"modus ponens":[apply_modus_ponens(parsed_syllogism), "valid"],
               "affirming the consequent":[apply_affirming_the_consequent(parsed_syllogism), "invalid"],
               "Categorical 1": [apply_valid_categorical_1(parsed_syllogism), "valid"],
+              "Categorical 2": [apply_valid_categorical_2(parsed_syllogism), "valid"],
+              "Categorical 3": [apply_valid_categorical_3(parsed_syllogism), "valid"],
+              "Categorical 4": [apply_valid_categorical_4(parsed_syllogism), "invalid"],
+              "Categorical 5": [apply_valid_categorical_5(parsed_syllogism), "invalid"],
+              "Categorical 6": [apply_valid_categorical_6(parsed_syllogism), "invalid"],
               "modus tollens":[apply_modus_tollens(parsed_syllogism), "valid"],
-              "denying the antecedent":[apply_denying_the_antecendent(parsed_syllogism), "invalid"]
-              }
+              "denying the antecedent":[apply_denying_the_antecendent(parsed_syllogism), "invalid"],
+              "eliminative syllogism":[apply_eliminative_syllogism(parsed_syllogism), "valid"]}
     
     result= rule_map.get(rule_to_prac)[0]
     validity= rule_map.get(rule_to_prac)[1]
@@ -78,7 +82,7 @@ if __name__== "__main__":
         line=normalize(line)
         line_logic=parse_atomic(line)
         parsed_syllogism.append(line_logic)
-        
+    
     rule_output, rule_name, validity= apply_rules(parsed_syllogism, rule_to_prac)
     
     final_output= output_gen(rule_output, rule_name, rule_to_prac, validity)

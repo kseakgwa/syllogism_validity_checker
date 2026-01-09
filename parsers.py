@@ -24,12 +24,13 @@ def parse_atomic(sentence: str) -> Proposition:
             if word != "not":
                 new_sentence.append(word)
         sentence= " ".join(new_sentence)
-        # print(sentence)
         return Negation(parse_atomic(sentence))
-    # if "or" in sentence.split
+    if "either" in sentence.split():
+        sentence=sentence.replace("either ", "")
+        disjuncts= sentence.split(" or ")
+        return Disjunction(parse_atomic(disjuncts[0]), parse_atomic(disjuncts[1]))
     else:
         try:
-            # print(sentence)
             return parse_individual(sentence)
         except:
             raise ValueError(f"Unrecognized form: {sentence}")
